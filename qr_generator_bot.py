@@ -23,34 +23,35 @@ def new_button(key:str):
 GETQR = range(1)
 
 async def start(update:Update,context:ContextTypes.DEFAULT_TYPE)->None:
-    await update.message.reply_text("Wellcome to Simple QR Maker bot.",reply_markup=new_button("New QR"))
+    await update.message.reply_text("🧡 Wellcome to Simple QR Code Generator bot.",reply_markup=new_button("New QR 🖼"))
 
 async def get_data(update:Update,context:ContextTypes.DEFAULT_TYPE)->None:
-    await update.message.reply_text("Send your text or link:",reply_markup=new_button("Cancel"))
+    await update.message.reply_text("⚙️ Send your text or link:",reply_markup=new_button("Cancel ❌"))
     return GETQR
 
 async def get_qr(update:Update,context:ContextTypes.DEFAULT_TYPE)->None:
     data = update.message.text
     qr_maker(data)
-    await update.message.reply_photo("qr.png","Done.",reply_markup=new_button("New QR"))
+    await update.message.reply_photo("qr.png","✅ Done.",reply_markup=new_button("New QR 🖼"))
     return ConversationHandler.END
 
 async def cancel(update:Update,context:ContextTypes.DEFAULT_TYPE)->None:
-    await update.message.reply_text("Canceled. See you later.\nClick \"New QR\" to start again.")
+    await update.message.reply_text("☑️ Canceled. See you later.\nClick \"New QR 🖼\" to start again.",reply_markup=new_button("New QR 🖼"))
     return ConversationHandler.END
 
 if __name__ == '__main__':
+
     BOTTOKEN = input("Enter Your Telegram Api Key: ")
 
     app = ApplicationBuilder().token(BOTTOKEN).build()
 
     app.add_handler(CommandHandler("start",start))
 
-    conv_handler = ConversationHandler(entry_points=[MessageHandler(filters.Regex("^New QR$"),get_data)],
+    conv_handler = ConversationHandler(entry_points=[MessageHandler(filters.Regex("^New QR 🖼$"),get_data)],
         states={
-            GETQR:[MessageHandler(filters.TEXT & ~filters.COMMAND,get_qr)]
+            GETQR:[MessageHandler(filters.TEXT & ~filters.COMMAND & ~filters.Regex("^Cancel ❌$") & ~filters.Regex("^New QR 🖼$"),get_qr)]
         },
-        fallbacks=[MessageHandler(filters.Regex("^Cancel$"),cancel)]
+        fallbacks=[MessageHandler(filters.Regex("^Cancel ❌$"),cancel)]
     )
 
     app.add_handler(conv_handler)
