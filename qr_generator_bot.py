@@ -3,6 +3,7 @@ from telegram import *
 from telegram.ext import *
 from telegram._update import *
 import logging
+import os
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -41,9 +42,9 @@ async def cancel(update:Update,context:ContextTypes.DEFAULT_TYPE)->None:
 
 if __name__ == '__main__':
 
-    BOTTOKEN = input("Enter Your Telegram Api Key: ")
+    BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-    app = ApplicationBuilder().token(BOTTOKEN).build()
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start",start))
 
