@@ -43,7 +43,8 @@ async def cancel(update:Update,context:ContextTypes.DEFAULT_TYPE)->None:
 if __name__ == '__main__':
 
     BOT_TOKEN = os.getenv("BOT_TOKEN")
-
+    PORT = int(os.getenv("PORT", 5000))
+    
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start",start))
@@ -57,5 +58,9 @@ if __name__ == '__main__':
 
     app.add_handler(conv_handler)
 
-    app.run_polling()
+    app.run_webhook(
+        listen="0.0.0.0",
+        port=PORT,
+        url_path=BOT_TOKEN,
+    )
 
